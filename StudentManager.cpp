@@ -30,6 +30,24 @@ int StudentManager::findStudentIndex(int targetId) const
 
 }
 
+void StudentManager::sortStudentsByScoreDescending()
+{
+	std::sort(students.begin(),
+		students.end(),
+		[](const Student& a, const Student& b)
+		{
+			return a.getScore() > b.getScore();
+		});
+}
+
+
+
+
+
+
+
+
+
 
 AddStudentResult StudentManager::addNewStudent(const Student& newStudent)
 {

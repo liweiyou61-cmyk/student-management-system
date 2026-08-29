@@ -32,13 +32,13 @@ int readMenuChoice()
 
 	while (true)
 	{
-		int choice = readInt("choose(0-6): ");
-		if (choice >= 0 && choice <= 6)
+		int choice = readInt("choose(0-7): ");
+		if (choice >= 0 && choice <= 7)
 		{
 			return choice;
 		}
 
-		cout << "Invalid choice.Pleade enter a number from 0 to 6." << endl;
+		cout << "Invalid choice.Pleade enter a number from 0 to 7." << endl;
 	}
 }
 
@@ -157,6 +157,20 @@ void handleShowAllStudents(const StudentManager& manager)
 	{
 		student.showInfo();
 	}
+}
+
+bool handleSortStudentsByScore(StudentManager& manager)
+{
+	if (manager.getStudents().empty())
+	{
+		cout << "There are no students to sort." << endl;
+		return false;
+	}
+
+	manager.sortStudentsByScoreDescending();
+	cout << "Students sorted by score from high to low." << endl;
+	handleShowAllStudents(manager);
+	return true;
 }
 
 
@@ -295,9 +309,11 @@ void showMenu()
 	cout << "4. Update student score" << endl;
 	cout << "5. Remove student" << endl;
 	cout << "6. Save student to file" << endl;
+	cout << "7. Sort students by score (high to low)" << endl;
 	cout << "0. Exit" << endl;
 
 }
+
 
 
 
@@ -369,6 +385,14 @@ int main()
 			if (handleSaveStudents(manager, studentFile))
 			{
 				hasUnsavedChanges = false;
+			}
+			break;
+		}
+		case 7:
+		{
+			if (handleSortStudentsByScore(manager))
+			{
+				hasUnsavedChanges = true;
 			}
 			break;
 		}

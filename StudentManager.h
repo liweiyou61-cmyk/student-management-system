@@ -54,6 +54,8 @@ public:
 
 	RemoveStudentResult removeStudent(int targetId);
 
+	void sortStudentsByScoreDescending();
+
 	bool loadStudentsFromFile(const std::string& filename);
 
 	bool saveStudentsToFile(const std::string& filename) const;
