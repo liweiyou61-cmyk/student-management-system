@@ -142,11 +142,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Student.cpp" />
     <ClCompile Include="StudentManager.cpp" />
-    <ClCompile Include="第一版.cpp" />
-    <ClCompile Include="第三版.cpp" />
-    <ClCompile Include="第二版.cpp" />
-    <ClCompile Include="第五版.cpp" />
-    <ClCompile Include="第四版.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Student.h" />

@@ -15,28 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="第一版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="第二版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="第三版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="第四版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="第五版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="第六版.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Student.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StudentManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

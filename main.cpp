@@ -140,6 +140,7 @@ bool readScoreForNewStudent(const string& prompt, int& score)
 	}
 	cout << "Invalid score. "
 		<< "Please enter 0 to 100, or -1 to cancel." << endl;
+	return false;
 }
 
 void handleShowAllStudents(const StudentManager& manager)
@@ -265,6 +266,7 @@ bool handleUpdateStudentScore(StudentManager& manager)
 	}
 	return false;
 	}
+	return false;
 }
 
 
@@ -290,6 +292,7 @@ bool handleRemoveStudent(StudentManager& manager)
 	}
 	return false;
 	}
+	return false;
 }
 
 bool handleSaveStudents(const StudentManager& manager, const string& filename)
@@ -323,7 +326,7 @@ void showMenu()
 int main()
 {
 
-	const string studentFile = "C:\\Users\\21263\\Desktop\\student.txt";
+	const string studentFile = "student.txt";
 
 	StudentManager manager;
 
