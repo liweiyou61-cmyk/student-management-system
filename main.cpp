@@ -140,7 +140,7 @@ bool readScoreForNewStudent(const string& prompt, int& score)
 	}
 	cout << "Invalid score. "
 		<< "Please enter 0 to 100, or -1 to cancel." << endl;
-	return false;
+	
 }
 
 void handleShowAllStudents(const StudentManager& manager)

@@ -161,8 +161,8 @@ bool StudentManager::loadStudentsFromFile(const std::string& filename)
 
 	if (!file.is_open())
 	{
-		std::cout << "File not found: " << filename << std::endl;
-		return false;
+		std::cout << "No student data file yet.Starting with an empty list. " << filename << std::endl;
+		return true;
 	}
 
 	students.clear();
