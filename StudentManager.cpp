@@ -44,16 +44,11 @@ void StudentManager::sortStudentsByScoreDescending()
 
 
 
-
-
-
-
-
 AddStudentResult StudentManager::addNewStudent(const Student& newStudent)
 {
-	if (newStudent.getScore() < 0 || newStudent.getScore() > 100)
+	if (newStudent.getId() <= 0||newStudent.getName().empty()||newStudent.getScore() < 0 || newStudent.getScore() > 100)
 	{
-		return AddStudentResult::InvalidScore;
+		return AddStudentResult::InvalidStudentData;
 	}
 	
 	auto it = lower_bound(
@@ -144,7 +139,7 @@ bool StudentManager::parseStudentLine(
 		return false;
 	}
 
-	if (id < 0 || name.empty() || score < 0 || score > 100)
+	if (id <= 0 || name.empty() || score < 0 || score > 100)
 	{
 		return false;
 	}
@@ -185,6 +180,7 @@ bool StudentManager::loadStudentsFromFile(const std::string& filename)
 		if (!parseStudentLine(line, id, name, score))
 		{
 			std::cout << "Skipped data at line: " << lineNumber << std::endl;
+			continue;
 	    }
 
 		Student student(id, name, score);
@@ -204,7 +200,7 @@ bool StudentManager::loadStudentsFromFile(const std::string& filename)
 				<< lineNumber << std::endl;
 			break;
 
-		case AddStudentResult::InvalidScore:
+		case AddStudentResult::InvalidStudentData:
 			std::cout
 				<< "Skipped invalid student data at line "
 				<< lineNumber << std::endl;

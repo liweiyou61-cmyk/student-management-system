@@ -10,7 +10,7 @@ enum class AddStudentResult
 {
 	Success,
 	DuplicateId,
-	InvalidScore
+	InvalidStudentData
 };
 
 enum class UpdateScoreResult

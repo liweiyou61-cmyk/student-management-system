@@ -128,19 +128,21 @@ bool readName(const string& prompt, string& name)
 
 bool readScoreForNewStudent(const string& prompt, int& score)
 {
-	int input = readInt(prompt);
-	if (input == -1)
+	while (true)
 	{
-		return false;
+		int input = readInt(prompt);
+		if (input == -1)
+		{
+			return false;
+		}
+		if (input >= 0 && input <= 100)
+		{
+			score = input;
+			return true;
+		}
+		cout << "Invalid score. "
+			<< "Please enter 0 to 100, or -1 to cancel." << endl;
 	}
-	if (input >= 0 && input <= 100)
-	{
-		score = input;
-		return true;
-	}
-	cout << "Invalid score. "
-		<< "Please enter 0 to 100, or -1 to cancel." << endl;
-	
 }
 
 void handleShowAllStudents(const StudentManager& manager)
@@ -224,9 +226,9 @@ bool handleAddStudent(StudentManager& manager)
 		cout << "Student added successfully." << endl;
 		return true;
 	}
-	else if (result == AddStudentResult::InvalidScore)
+	else if (result == AddStudentResult::InvalidStudentData)
 	{
-		cout << "Invalid score." << endl;
+		cout << "Invalid student data." << endl;
 		return false;
 	}
 	else
