@@ -1,5 +1,6 @@
 #pragma once
 #include<string>
+#include<ostream>
 
 
 class Student
@@ -19,7 +20,11 @@ public:
 
 	bool setScore(int newScore);
 
-	void showInfo() const;
+	static bool isValidId(int id);
+	static bool isValidName(const std::string& name);
+	static bool isValidScore(int score);
+
+	friend std::ostream& operator<<(std::ostream& out, const Student& student);
 	
 
 };

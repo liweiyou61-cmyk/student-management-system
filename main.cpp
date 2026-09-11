@@ -48,7 +48,7 @@ int readStudentId(const string& prompt)
 	while (true)
 	{
 		int id = readInt(prompt);
-		if (id > 0)
+		if (Student::isValidId(id))
 		{
 			return id;
 		}
@@ -69,7 +69,7 @@ int readNewStudentId(const StudentManager& manager, const string& prompt)
 		{
 			return 0;
 		}
-		if (id < 0)
+		if (!Student::isValidId(id))
 		{
 			cout << "Student Id must be greater than 0." << endl;
 			continue;
@@ -93,7 +93,7 @@ int readScore(const string& prompt)
 	while (true)
 	{
 		int score = readInt(prompt);
-		if (score >= 0 && score <= 100)
+		if (Student::isValidScore(score))
 		{
 			return score;
 		}
@@ -117,7 +117,7 @@ bool readName(const string& prompt, string& name)
 		{
 			return false;
 		}
-		if (!input.empty())
+		if (Student::isValidName(input))
 		{
 			name = input;
 			return true;
@@ -135,7 +135,7 @@ bool readScoreForNewStudent(const string& prompt, int& score)
 		{
 			return false;
 		}
-		if (input >= 0 && input <= 100)
+		if (Student::isValidScore(input))
 		{
 			score = input;
 			return true;
@@ -158,7 +158,7 @@ void handleShowAllStudents(const StudentManager& manager)
 	cout << "All students: " << endl;
 	for (const Student& student : students)
 	{
-		student.showInfo();
+		cout<<student<<endl;
 	}
 }
 
@@ -184,7 +184,7 @@ void handleFindStudent(const StudentManager& manager)
 	if (student != nullptr)
 	{
 		cout << "Found: " << endl;
-		student->showInfo();
+		cout<<*student<<endl;
 	}
 	else
 	{
@@ -225,11 +225,6 @@ bool handleAddStudent(StudentManager& manager)
 	{
 		cout << "Student added successfully." << endl;
 		return true;
-	}
-	else if (result == AddStudentResult::InvalidStudentData)
-	{
-		cout << "Invalid student data." << endl;
-		return false;
 	}
 	else
 	{
@@ -299,8 +294,43 @@ bool handleRemoveStudent(StudentManager& manager)
 
 bool handleSaveStudents(const StudentManager& manager, const string& filename)
 {
-	
-	return manager.saveStudentsToFile(filename);
+	if (manager.saveStudentsToFile(filename))
+	{
+		cout << manager.getStudents().size()
+			<< " students saved successfully."
+			<< endl;
+		return true;
+	}
+
+	cout << "Failed to save students to: "
+		<< filename << endl;
+	return false;
+}
+
+void handleLoadStudents(StudentManager& manager, const string& filename)
+{
+	LoadStudentsResult result = manager.loadStudentsFromFile(filename);
+
+	if (!result.fileOpened)
+	{
+		cout << "No student data yet.Starting with an empty list. " << endl;
+
+		return;
+	}
+
+	cout << result.loadedCount << " students loaded successfully. " << endl;
+
+	if (result.invalidLineCount > 0)
+	{
+		cout << result.invalidLineCount << " invalid data lines were skipped. " << endl;
+
+	}
+	if (result.duplicateIdCount > 0)
+	{
+		cout << result.duplicateIdCount << " duplicate student IDs were skipped. " << endl;
+
+	}
+
 }
 
 
@@ -332,7 +362,7 @@ int main()
 
 	StudentManager manager;
 
-	manager.loadStudentsFromFile(studentFile);
+	handleLoadStudents(manager, studentFile);
 
 	bool hasUnsavedChanges = false;
 

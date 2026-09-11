@@ -4,7 +4,6 @@
 #include<sstream>
 #include<exception>
 #include<fstream>
-#include<iostream>
 
 const std::vector<Student>& StudentManager::getStudents() const
 {
@@ -13,20 +12,19 @@ const std::vector<Student>& StudentManager::getStudents() const
 
 int StudentManager::findStudentIndex(int targetId) const
 {
-	auto it = lower_bound(
+	auto it = std::find_if(
 	    students.begin(),
 		students.end(),
-		targetId,
-		[](const Student& student, int targetId)
+		[targetId](const Student& student)
 		{
-			return student.getId() < targetId;
+			return student.getId() == targetId;
 		});
 
-	if (it != students.end() && it->getId() == targetId)
+	if (it == students.end())
 	{
-		return static_cast<int>(it - students.begin());
+		return -1;
 	}
-	return -1;
+	return static_cast<int>(it - students.begin());
 
 }
 
@@ -46,26 +44,13 @@ void StudentManager::sortStudentsByScoreDescending()
 
 AddStudentResult StudentManager::addNewStudent(const Student& newStudent)
 {
-	if (newStudent.getId() <= 0||newStudent.getName().empty()||newStudent.getScore() < 0 || newStudent.getScore() > 100)
-	{
-		return AddStudentResult::InvalidStudentData;
-	}
 	
-	auto it = lower_bound(
-	students.begin(),
-		students.end(),
-		newStudent.getId(),
-		[](const Student& student, int targetId)
-		{
-			return student.getId() < targetId;
-		});
-
-	if (it != students.end() && it->getId() == newStudent.getId())
+	if (findStudentIndex(newStudent.getId()) != -1)
 	{
 		return AddStudentResult::DuplicateId;
 	}
 	
-	students.insert(it, newStudent);
+	students.push_back(newStudent);
 	return AddStudentResult::Success;
 }
 
@@ -77,7 +62,7 @@ UpdateScoreResult StudentManager::updateStudentScore(int targetId, int newScore)
 	{
 		return UpdateScoreResult::StudentNotFound;
 	}
-	if (newScore < 0 || newScore > 100)
+	if (!Student::isValidScore(newScore))
 	{
 		return UpdateScoreResult::InvalidScore;
 	}
@@ -139,7 +124,7 @@ bool StudentManager::parseStudentLine(
 		return false;
 	}
 
-	if (id <= 0 || name.empty() || score < 0 || score > 100)
+	if (!Student::isValidId(id) || !Student::isValidName(name)|| !Student::isValidScore(score))
 	{
 		return false;
 	}
@@ -150,24 +135,23 @@ bool StudentManager::parseStudentLine(
 
 
 
-bool StudentManager::loadStudentsFromFile(const std::string& filename)
+LoadStudentsResult StudentManager::loadStudentsFromFile(const std::string& filename)
 {
+	LoadStudentsResult result;
 	std::ifstream file(filename);
 
 	if (!file.is_open())
 	{
-		std::cout << "No student data file yet.Starting with an empty list. " << filename << std::endl;
-		return true;
+		return result;
 	}
 
+	result.fileOpened = true;
 	students.clear();
 	std::string line;
-	int lineNumber = 0;
-	int loadedCount = 0;
+	
 
-	while (getline(file, line))
+	while (std::getline(file, line))
 	{
-		++lineNumber;
 
 		if (line.empty())
 		{
@@ -179,40 +163,30 @@ bool StudentManager::loadStudentsFromFile(const std::string& filename)
 
 		if (!parseStudentLine(line, id, name, score))
 		{
-			std::cout << "Skipped data at line: " << lineNumber << std::endl;
+			++result.invalidLineCount;
 			continue;
 	    }
 
 		Student student(id, name, score);
 
-		AddStudentResult result =
+		AddStudentResult addResult =
 			addNewStudent(student);
 
-		switch (result)
+		switch (addResult)
 		{
 		case AddStudentResult::Success:
-			++loadedCount;
+			++result.loadedCount;
 			break;
 
 		case AddStudentResult::DuplicateId:
-			std::cout
-				<< "Skipped duplicate student ID at line "
-				<< lineNumber << std::endl;
-			break;
-
-		case AddStudentResult::InvalidStudentData:
-			std::cout
-				<< "Skipped invalid student data at line "
-				<< lineNumber << std::endl;
+			
+			++result.duplicateIdCount;
 			break;
 		}
 
 	}
 
-	file.close();
-
-	std::cout << loadedCount << " students loaded successfully." << std::endl;
-	return true;
+	return result;
 }
 
 
@@ -222,7 +196,6 @@ bool StudentManager::saveStudentsToFile(const std::string& filename) const
 
 	if (!file.is_open())
 	{
-		std::cout << "Failed to open " << filename << std::endl;
 		return false;
 	}
 
@@ -230,12 +203,10 @@ bool StudentManager::saveStudentsToFile(const std::string& filename) const
 	{ 
 		file << student.getId() << "|"
 			<< student.getName() << "|"
-			<< student.getScore() << std::endl;
+			<< student.getScore() <<"\n";
 	}
-	file.close();
 
-	std::cout << students.size() << " students saved successfully." << std::endl;
-	return true;
+	return file.good();
 }
 
 

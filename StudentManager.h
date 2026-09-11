@@ -10,7 +10,6 @@ enum class AddStudentResult
 {
 	Success,
 	DuplicateId,
-	InvalidStudentData
 };
 
 enum class UpdateScoreResult
@@ -25,6 +24,15 @@ enum class RemoveStudentResult
 	Success,
 	StudentNotFound
 };
+
+struct LoadStudentsResult
+{
+	bool fileOpened = false;
+	int loadedCount = 0;
+	int invalidLineCount = 0;
+	int duplicateIdCount = 0;
+};
+
 
 class StudentManager
 {
@@ -56,7 +64,7 @@ public:
 
 	void sortStudentsByScoreDescending();
 
-	bool loadStudentsFromFile(const std::string& filename);
+	LoadStudentsResult loadStudentsFromFile(const std::string& filename);
 
 	bool saveStudentsToFile(const std::string& filename) const;
 };
