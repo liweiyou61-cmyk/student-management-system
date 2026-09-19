@@ -2,6 +2,7 @@
 #include<limits>
 #include "Student.h"
 #include "StudentManager.h"
+#include "AppInfo.h"
 
 
 using namespace std;
@@ -32,7 +33,7 @@ int readMenuChoice()
 
 	while (true)
 	{
-		int choice = readInt("choose(0-7): ");
+		int choice = readInt("Choose an option(0-7): ");
 		if (choice >= 0 && choice <= 7)
 		{
 			return choice;
@@ -357,7 +358,7 @@ void showMenu()
 
 int main()
 {
-
+	showAppInfo();
 	const string studentFile = "student.txt";
 
 	StudentManager manager;
