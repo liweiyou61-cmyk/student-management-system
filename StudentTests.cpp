@@ -28,6 +28,15 @@ void check(bool condition, const std::string& testName)
 int main()
 {
 	Student student(1001, "Alice", 95);
+        check(
+Student::isValidScore(0),
+"Score lower boundary 0 is valid"
+);
+check(
+Student::isValidScore(100),
+"Score upper boundary 100 is valid"
+);
+
 
 	check(
 		student.getId() == 1001,
